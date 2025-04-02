@@ -54,23 +54,19 @@ namespace ProgramacaoIV.Venda.Api.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Vendedor",
+                name: "VENDEDOR",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
-                    vendedor_id = table.Column<int>(type: "int", nullable: false),
-                    nome = table.Column<string>(type: "longtext", nullable: false),
-                    email = table.Column<string>(type: "longtext", nullable: false),
-                    is_ativo = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    dt_criacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    dt_atualizacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    IsAtivo = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DataAtualizacao = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    ID = table.Column<Guid>(type: "char(36)", nullable: false),
+                    NOME = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    EMAIL = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    IN_ATIVO = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    DT_CRIACAO = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DT_ATUALIZACAO = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Vendedor", x => x.Id);
+                    table.PrimaryKey("PK_VENDEDOR", x => x.ID);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -79,9 +75,8 @@ namespace ProgramacaoIV.Venda.Api.Migrations
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "char(36)", nullable: false),
+                    ID_VENDEDOR = table.Column<Guid>(type: "char(36)", nullable: false),
                     ID_CLIENTE = table.Column<Guid>(type: "char(36)", nullable: false),
-                    VendedorId = table.Column<Guid>(type: "char(36)", nullable: false),
-                    id_vendodor = table.Column<int>(type: "int", nullable: false),
                     IN_ATIVO = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     DT_CRIACAO = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DT_ATUALIZACAO = table.Column<DateTime>(type: "datetime(6)", nullable: false)
@@ -96,11 +91,11 @@ namespace ProgramacaoIV.Venda.Api.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_TRANSACAO_Vendedor_VendedorId",
-                        column: x => x.VendedorId,
-                        principalTable: "Vendedor",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_TRANSACAO_VENDEDOR_ID_VENDEDOR",
+                        column: x => x.ID_VENDEDOR,
+                        principalTable: "VENDEDOR",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -141,9 +136,9 @@ namespace ProgramacaoIV.Venda.Api.Migrations
                 column: "ID_CLIENTE");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TRANSACAO_VendedorId",
+                name: "IX_TRANSACAO_ID_VENDEDOR",
                 table: "TRANSACAO",
-                column: "VendedorId");
+                column: "ID_VENDEDOR");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TRANSACAO_ITEM_ID_ITEM_TRANSACAO",
@@ -172,7 +167,7 @@ namespace ProgramacaoIV.Venda.Api.Migrations
                 name: "CLIENTE");
 
             migrationBuilder.DropTable(
-                name: "Vendedor");
+                name: "VENDEDOR");
         }
     }
 }

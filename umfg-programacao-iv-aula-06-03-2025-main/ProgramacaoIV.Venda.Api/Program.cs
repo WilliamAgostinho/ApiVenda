@@ -4,7 +4,7 @@ using ProgramacaoIV.Venda.Api.Context;
 using ProgramacaoIV.Venda.Api.Entidades;
 using static ProgramacaoIV.Venda.Api.DTO.TransacaoDTO;
 
-var connectionString = "Server=localhost;Port=3307;Database=umfg_venda_api;Uid=root;Pwd=root;";
+var connectionString = "Server=localhost;Port=3308;Database=umfg_venda_api;Uid=root;Pwd=root;";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,11 +29,12 @@ app.MapPost("/clientes", async (Cliente cliente, VendaContext context) =>
     return Results.Created($"/clientes/{cliente.Id}", cliente);
 });
 
-app.MapPut("/clientes/{id}", async (string id, Cliente input, VendaContext context) =>
+app.MapPut("/clientes/{id}", async (string id, Cliente input, VendaContext context, TransacaoCapaRequest request) =>
 {
     var cliente = await context.Clientes.Where(x => x.Id == Guid.Parse(id) && x.IsAtivo).FirstOrDefaultAsync();
+    var vendedor = await context.Vendedores.Where(x => x.Id == Guid.Parse(id) && x.IsAtivo).FirstOrDefaultAsync();
 
-    if (cliente is null)
+    if (cliente is null || vendedor is null)
         return Results.NotFound();
 
     cliente.Nome = input.Nome;
@@ -134,11 +135,12 @@ app.MapGet("/transacoes/{id}", async (string id, VendaContext context)
 app.MapPost("/transacoes", async ([FromBody] TransacaoCapaRequest request, VendaContext context) =>
 {
     var cliente = await context.Clientes.Where(x => x.Id == request.IdCliente && x.IsAtivo).FirstOrDefaultAsync();
+    var vendedor = await context.Vendedores.Where(x => x.Id == request.IdVendedor && x.IsAtivo).FirstOrDefaultAsync();
 
-    if (cliente is null)
+    if (cliente is null || vendedor is null) 
         return Results.NotFound();
 
-    var transacao = new Transacao(cliente);
+    var transacao = new Transacao(vendedor, cliente);
 
     context.Transacoes.Add(transacao);
     await context.SaveChangesAsync();

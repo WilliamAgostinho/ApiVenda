@@ -19,6 +19,13 @@ public sealed class TransacaoMap : AbstractEntidadeMap<Transacao>
             .OnDelete(DeleteBehavior.Restrict) // Evita que entidades filhas sejam excluidas quando a principal e excluida
             .IsRequired();
 
+        builder
+            .HasOne(x => x.Vendedor)
+            .WithMany()
+            .HasForeignKey("ID_VENDEDOR")
+            .OnDelete(DeleteBehavior.Restrict) // Evita que entidades filhas sejam excluidas quando a principal e excluida
+            .IsRequired();
+
         builder.HasMany(x => x.Itens)
             .WithOne()
             .HasForeignKey("ID_ITEM_TRANSACAO")

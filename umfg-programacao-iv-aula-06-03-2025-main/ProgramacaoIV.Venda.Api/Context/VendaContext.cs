@@ -6,7 +6,10 @@ namespace ProgramacaoIV.Venda.Api.Context;
 
 public sealed class VendaContext : DbContext
 {
+
+
     public DbSet<Cliente> Clientes { get; set; }
+    public DbSet<Vendedor> Vendedores { get; set; }
     public DbSet<Produto> Produtos { get; set; }
     public DbSet<Transacao> Transacoes { get; set; }
     public DbSet<ItemTransacao> ItensTransacoes { get; set; }

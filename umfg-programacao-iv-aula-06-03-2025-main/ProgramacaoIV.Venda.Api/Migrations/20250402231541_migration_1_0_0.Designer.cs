@@ -11,7 +11,7 @@ using ProgramacaoIV.Venda.Api.Context;
 namespace ProgramacaoIV.Venda.Api.Migrations
 {
     [DbContext(typeof(VendaContext))]
-    [Migration("20250402010306_migration_1_0_0")]
+    [Migration("20250402231541_migration_1_0_0")]
     partial class migration_1_0_0
     {
         /// <inheritdoc />
@@ -180,21 +180,18 @@ namespace ProgramacaoIV.Venda.Api.Migrations
                     b.Property<Guid>("ID_CLIENTE")
                         .HasColumnType("char(36)");
 
+                    b.Property<Guid>("ID_VENDEDOR")
+                        .HasColumnType("char(36)");
+
                     b.Property<bool>("IsAtivo")
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("IN_ATIVO");
-
-                    b.Property<Guid>("VendedorId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<int>("id_vendodor")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ID_CLIENTE");
 
-                    b.HasIndex("VendedorId");
+                    b.HasIndex("ID_VENDEDOR");
 
                     b.ToTable("TRANSACAO", (string)null);
                 });
@@ -203,40 +200,35 @@ namespace ProgramacaoIV.Venda.Api.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("char(36)")
+                        .HasColumnName("ID");
 
                     b.Property<DateTime>("DataAtualizacao")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("DT_ATUALIZACAO");
 
                     b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("DT_CRIACAO");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)")
+                        .HasColumnName("EMAIL");
 
                     b.Property<bool>("IsAtivo")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("IN_ATIVO");
 
-                    b.Property<DateTime>("dt_atualizacao")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("dt_criacao")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("email")
+                    b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("is_ativo")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("nome")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("vendedor_id")
-                        .HasColumnType("int");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("NOME");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Vendedor");
+                    b.ToTable("VENDEDOR", (string)null);
                 });
 
             modelBuilder.Entity("ProgramacaoIV.Venda.Api.Entidades.ItemTransacao", b =>
@@ -265,8 +257,8 @@ namespace ProgramacaoIV.Venda.Api.Migrations
 
                     b.HasOne("ProgramacaoIV.Venda.Api.Entidades.Vendedor", "Vendedor")
                         .WithMany()
-                        .HasForeignKey("VendedorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("ID_VENDEDOR")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Cliente");
